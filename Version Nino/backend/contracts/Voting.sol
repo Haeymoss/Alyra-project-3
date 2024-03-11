@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity 0.8.20;
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
 @title Voting contract
@@ -33,6 +32,7 @@ contract Voting is Ownable {
 
     WorkflowStatus public workflowStatus;
     Proposal[] proposalsArray;
+    address[] public votersAddresses;
     mapping(address => Voter) voters;
 
     /**
@@ -115,6 +115,8 @@ contract Voting is Ownable {
         require(voters[_addr].isRegistered != true, "Already registered");
 
         voters[_addr].isRegistered = true;
+        votersAddresses.push(_addr);
+
         emit VoterRegistered(_addr);
     }
 
@@ -149,6 +151,7 @@ contract Voting is Ownable {
     @dev Vote for a proposal
     @param _id The id of the proposal
     @notice The voter must not have already voted, the workflow status must be VotingSessionStarted and the proposal must exist
+    @notice The vote count of the proposal will be incremented and the winning proposal will be updated if necessary
     */
     function setVote(uint _id) external onlyVoters {
         require(
@@ -163,6 +166,15 @@ contract Voting is Ownable {
         proposalsArray[_id].voteCount++;
 
         emit Voted(msg.sender, _id);
+
+        if (
+            proposalsArray[_id].voteCount >
+            proposalsArray[winningProposalID].voteCount
+        ) {
+            winningProposalID = _id;
+        } else {
+            winningProposalID = winningProposalID;
+        }
     }
 
     // ::::::::::::: STATE ::::::::::::: //
@@ -245,17 +257,6 @@ contract Voting is Ownable {
             workflowStatus == WorkflowStatus.VotingSessionEnded,
             "Current status is not voting session ended"
         );
-        uint _winningProposalId;
-        for (uint256 p = 0; p < proposalsArray.length; p++) {
-            if (
-                proposalsArray[p].voteCount >
-                proposalsArray[_winningProposalId].voteCount
-            ) {
-                _winningProposalId = p;
-            }
-        }
-        winningProposalID = _winningProposalId;
-
         workflowStatus = WorkflowStatus.VotesTallied;
         emit WorkflowStatusChange(
             WorkflowStatus.VotingSessionEnded,

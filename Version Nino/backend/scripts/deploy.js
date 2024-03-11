@@ -1,14 +1,11 @@
 const hre = require("hardhat");
 
 async function main() {
+  const Voting = await hre.ethers.deployContract("Voting");
 
-  const SimpleStorage = await hre.ethers.deployContract("SimpleStorage");
+  await Voting.waitForDeployment();
 
-  await SimpleStorage.waitForDeployment();
-
-  console.log(
-    `SimpleStorage deployed to ${SimpleStorage.target}`
-  );
+  console.log(`Voting deployed to ${Voting.target}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

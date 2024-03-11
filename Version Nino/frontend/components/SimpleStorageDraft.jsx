@@ -28,7 +28,7 @@ import { parseAbiItem } from 'viem'
 // On importe le publicClient créé (voir ce fichier pour avoir les commentaires sur ce que fait réellement ce publicClient)
 import { publicClient } from '../utils/client'
 
-const SimpleStorage = () => {
+const Voting = () => {
     // On récupère l'adresse connectée à la DApp
     const { address } = useAccount();
 
@@ -217,4 +217,4 @@ const SimpleStorage = () => {
   )
 }
 
-export default SimpleStorage
+export default Voting
