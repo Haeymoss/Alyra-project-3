@@ -114,7 +114,6 @@ contract Voting is Ownable {
         require(voters[_addr].isRegistered != true, "Already registered");
 
         voters[_addr].isRegistered = true;
-        votersAddresses.push(_addr);
 
         emit VoterRegistered(_addr);
     }
