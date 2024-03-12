@@ -1,9 +1,21 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { Flex, Text, Input, Button, useToast, Heading, Spinner, Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react'
+import { useEffect, useState } from "react";
+import {
+  Flex,
+  Text,
+  Input,
+  Button,
+  useToast,
+  Heading,
+  Spinner,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from "@chakra-ui/react";
 // Données du contrat
-import { contractAddress, contractAbi } from '@/constants'
+import { contractAddress, contractAbi } from "@/constants";
 
 // Wagmi
 /*
@@ -13,40 +25,46 @@ useWriteContract : Ecrire des données dans un contrat
 useWaitForTransactionReceipt : Attendre que la transaction soit confirmée (équivalent de transaction.wait() avec ethers)
 useWatchContractEvent : Récupérer en temps réel si un évènement a été émis
 */
-import { useReadContract, useAccount, useWriteContract, useWaitForTransactionReceipt, useWatchContractEvent } from 'wagmi'
+import {
+  useReadContract,
+  useAccount,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+  useWatchContractEvent,
+} from "wagmi";
 //Viem
 // Permet de parser l'event
-import { parseAbiItem } from 'viem'
+import { parseAbiItem } from "viem";
 
 // On importe le publicClient créé (voir ce fichier pour avoir les commentaires sur ce que fait réellement ce publicClient)
-import { publicClient } from '../utils/client'
+import { publicClient } from "../utils/client";
 
 // Components
-import Admin from './Admin/Admin'
-import Voter from './Voter/Voter'
+import Admin from "./Admin/Admin";
+import Voter from "./Voter/Voter";
 
 const Voting = () => {
-    const { address,  } = useAccount();
+  const { address } = useAccount();
 
-    const { data: ownerAddress } = useReadContract({
-        address: contractAddress,
-        abi: contractAbi,
-        functionName: "owner",
-      });
+  const { data: ownerAddress } = useReadContract({
+    address: contractAddress,
+    abi: contractAbi,
+    functionName: "owner",
+  });
 
-    return (
-      <>
-        {address === ownerAddress ? (
-          <>
-            <Admin />
-          </>
-        ) : (
-          <>
-            <Voter />
-          </>
-        )}
-      </>
-    );
-}
+  return (
+    <>
+      {address === ownerAddress ? (
+        <>
+          <Admin />
+        </>
+      ) : (
+        <>
+          <Voter />
+        </>
+      )}
+    </>
+  );
+};
 
-export default Voting
+export default Voting;

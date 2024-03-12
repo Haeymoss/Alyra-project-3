@@ -32,7 +32,6 @@ contract Voting is Ownable {
 
     WorkflowStatus public workflowStatus;
     Proposal[] proposalsArray;
-    address[] public votersAddresses;
     mapping(address => Voter) voters;
 
     /**
