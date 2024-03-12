@@ -32,7 +32,7 @@ const Admin = () => {
   return (
     <Flex direction="column" width="100%">
       <Heading as="h1" size="xl" mb="2rem">
-        Bonjour chèr(e) administrateur...
+        Bonjour cher administrateur...
       </Heading>
       <Grid templateColumns="1fr 1fr 1fr" gap={4} height="100%">
         <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">

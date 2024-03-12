@@ -36,6 +36,7 @@ import {
 import { parseAbiItem } from "viem";
 import { contractAddress, contractAbi } from "@/constants";
 import { publicClient } from "../../utils/client";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 const Workflow = () => {
   const { address } = useAccount();
@@ -47,6 +48,8 @@ const Workflow = () => {
     abi: contractAbi,
     functionName: "workflowStatus",
   });
+
+  //Handle states
 
   return (
     <div>
@@ -94,37 +97,67 @@ const Workflow = () => {
             <Tr>
               <Td>0</Td>
               <Td>
-                <Badge>Enregistrement des électeurs</Badge>
+                {workflowStatus === 0 ? (
+                  <Badge colorScheme="green">
+                    Enregistrement des électeurs
+                  </Badge>
+                ) : (
+                  <Badge>Enregistrement des électeurs</Badge>
+                )}
               </Td>
             </Tr>
             <Tr>
               <Td>1</Td>
               <Td>
-                <Badge>Enregistrement des propositions en cours</Badge>
+                {workflowStatus === 1 ? (
+                  <Badge colorScheme="green">
+                    Enregistrement des propositions en cours
+                  </Badge>
+                ) : (
+                  <Badge>Enregistrement des propositions en cours</Badge>
+                )}
               </Td>
             </Tr>
             <Tr>
               <Td>2</Td>
               <Td>
-                <Badge>Enregistrement des propositions terminées</Badge>
+                {workflowStatus === 2 ? (
+                  <Badge colorScheme="green">
+                    Enregistrement des propositions terminées
+                  </Badge>
+                ) : (
+                  <Badge>Enregistrement des propositions terminées</Badge>
+                )}
               </Td>
             </Tr>
             <Tr>
               <Td>3</Td>
               <Td>
-                <Badge>Session de vote en cours</Badge>
+                {workflowStatus === 3 ? (
+                  <Badge colorScheme="green">Session de vote en cours</Badge>
+                ) : (
+                  <Badge>Session de vote en cours</Badge>
+                )}
               </Td>
             </Tr>
             <Tr>
               <Td>4</Td>
               <Td>
-                <Badge>Session de vote terminée</Badge>
+                {workflowStatus === 4 ? (
+                  <Badge colorScheme="green">Session de vote terminée</Badge>
+                ) : (
+                  <Badge>Session de vote terminée</Badge>
+                )}
               </Td>
             </Tr>
             <Tr>
               <Td>5</Td>
               <Td>
-                <Badge>Comptabilisation des votes</Badge>
+                {workflowStatus === 5 ? (
+                  <Badge colorScheme="green">Comptabilisation des votes</Badge>
+                ) : (
+                  <Badge>Comptabilisation des votes</Badge>
+                )}
               </Td>
             </Tr>
           </Tbody>
@@ -134,7 +167,7 @@ const Workflow = () => {
       <Heading as="h3" size="sm" mb="1rem">
         Passer au workflow suivant
       </Heading>
-      <Button width="100%" colorScheme="blue">
+      <Button rightIcon={<ArrowForwardIcon />} width="100%" colorScheme="blue">
         {workflowStatus === 0
           ? "Enregistrement des propositions"
           : workflowStatus === 1
