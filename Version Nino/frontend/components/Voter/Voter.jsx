@@ -12,6 +12,8 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import {
   useReadContract,
@@ -23,6 +25,9 @@ import {
 import { parseAbiItem } from "viem";
 import { contractAddress, contractAbi } from "@/constants";
 import { publicClient } from "../../utils/client";
+import Proposition from "./MaPropositions";
+import Vote from "./Vote";
+import MesPropositions from "./MesPropositions";
 
 const Voter = () => {
   const { address } = useAccount();
@@ -42,20 +47,25 @@ const Voter = () => {
   });
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" width='100%'>
       <Heading as="h1" size="xl" mb="2rem">
-        Bonjour chèr(e) administrateur...
+        Bonjour chèr(e) Voteur...
       </Heading>
-      <Flex>
-        <Input
-          placeholder="Chek the Address"
-          onChange={(e) => setaddressToCheck(e.target.value)}
-          onSubmit={refetchVoters}
-        />
-      </Flex>
-      <Flex>
-        <Text>{voters?.toString()}</Text>
-      </Flex>
+      <Grid templateColumns="1fr 1fr" gap={6} height="100%">
+        <Grid templateRows={2} gap={20} height="100%">
+        <GridItem colSpan={1} p="1rem">
+          <Proposition />
+        </GridItem>
+        <GridItem colSpan={1} p="1rem">
+          <MesPropositions />
+          </GridItem>
+        </Grid>
+        <GridItem colSpan={1} p="1rem" >
+          <Vote />
+        </GridItem>
+
+      </Grid>
+
     </Flex>
   );
 };
