@@ -14,6 +14,9 @@ import {
   AlertDescription,
   Grid,
   GridItem,
+  List,
+  ListItem,
+  ListIcon,
 } from "@chakra-ui/react";
 import {
   useReadContract,
@@ -87,12 +90,12 @@ const Whitelist = () => {
     };
 
     const voterAddedEvent = await fetchEvents(
-      "event VoterRegistered(address voterAddress"
+      "event VoterRegistered(address voterAddress)"
     );
 
     setvoterAddedEvent(
       voterAddedEvent.map((log) => ({
-        voterAddress: log.topics.voterAddress.toString(),
+        voterAddress: log.args.voterAddress.toString(),
       }))
     );
   };
@@ -100,11 +103,11 @@ const Whitelist = () => {
   useEffect(() => {
     const getAllEvents = async () => {
       if (address !== "undefined") {
-        await getEvents();
+        await getVoterAddedEvent();
       }
     };
     getAllEvents();
-  }, [address]);
+  }, [address, voterAddedEvent]);
 
   return (
     <div>
@@ -132,7 +135,7 @@ const Whitelist = () => {
         {hash && (
           <Alert status="success" mt="1rem" mb="1rem">
             <AlertIcon />
-            Hash de la dernière transaction : {hash.substring(0, 4)}...
+            Hash de la dernière transaction : {hash.substring(0, 6)}...
             {hash.substring(hash.length - 4)}
           </Alert>
         )}
@@ -155,9 +158,14 @@ const Whitelist = () => {
           </Alert>
         )}
       </Flex>
-      {/* <Heading as='h3' size='sm' mt="2rem">
-              Liste des électeurs
-            </Heading> */}
+      <Heading as="h3" size="sm" mt="2rem">
+        Liste des électeurs
+      </Heading>
+      {voterAddedEvent.map((voter, index) => (
+        <List spacing={3} key={crypto.randomUUID()}>
+          <ListItem>{voter.voterAddress}</ListItem>
+        </List>
+      ))}
     </div>
   );
 };
