@@ -50,7 +50,6 @@ const Workflow = () => {
   });
 
   //Handle states
-
   return (
     <div>
       <Heading as="h2" size="lg" mb="2rem" align="center">

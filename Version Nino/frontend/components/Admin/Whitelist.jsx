@@ -72,6 +72,40 @@ const Whitelist = () => {
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt(hash);
 
+  // Events
+  const [voterAddedEvent, setvoterAddedEvent] = useState([]);
+
+  const getVoterAddedEvent = async () => {
+    const fetchEvents = async (eventSignature) => {
+      return await publicClient.getLogs({
+        address: contractAddress,
+        event: parseAbiItem(eventSignature),
+        fromBlock: 0n,
+        toBlock: "latest",
+        account: address,
+      });
+    };
+
+    const voterAddedEvent = await fetchEvents(
+      "event VoterRegistered(address voterAddress"
+    );
+
+    setvoterAddedEvent(
+      voterAddedEvent.map((log) => ({
+        voterAddress: log.topics.voterAddress.toString(),
+      }))
+    );
+  };
+
+  useEffect(() => {
+    const getAllEvents = async () => {
+      if (address !== "undefined") {
+        await getEvents();
+      }
+    };
+    getAllEvents();
+  }, [address]);
+
   return (
     <div>
       <Heading as="h2" size="lg" mb="2rem" align="center">
