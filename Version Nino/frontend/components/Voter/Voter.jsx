@@ -50,13 +50,12 @@ const Voter = () => {
       <Heading as="h1" size="xl" mb="2rem">
         Bonjour chèr(e) Voteur...
       </Heading>
-      <Grid templateColumns="1fr 1fr" gap={6} height="100%">
-        <Grid templateRows={2} gap={20} height="100%">
-          <GridItem colSpan={1} p="1rem">
-            <Proposals />
-          </GridItem>
-        </Grid>
-        <GridItem colSpan={1} p="1rem">
+
+      <Grid templateColumns="1fr 1fr 1fr" gap={4} height="100%">
+        <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">
+          <Proposals />
+        </GridItem>
+        <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">
           <Vote />
         </GridItem>
       </Grid>
