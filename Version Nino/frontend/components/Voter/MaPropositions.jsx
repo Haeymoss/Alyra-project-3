@@ -73,7 +73,6 @@ const Proposition = () => {
     useWaitForTransactionReceipt(hash);
 
 
-
   return (
     <>
 
@@ -96,7 +95,10 @@ const Proposition = () => {
         m="10px"
         />
       <Button leftIcon={<AddIcon />} colorScheme='teal' size='lg' p="10px" onClick={addProposal}>{isPending ? "En cours d'ajout ..." : "Ajouter"}</Button>
+      <br />
+      
       </Flex>
+
     </>
   )
 }

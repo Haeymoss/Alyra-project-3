@@ -49,6 +49,37 @@ const Workflow = () => {
     functionName: "workflowStatus",
   });
 
+  const { data: hash, isPending, writeContract } = useWriteContract({
+    mutation: {
+      onSuccess: () => {
+        toast({
+          title: "Le workflow a été mis à jour avec succès",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: error.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      },
+    },
+  });
+
+
+  const startProposalsRegistering = async () => {
+    writeContract({
+      address: contractAddress,
+      abi: contractAbi,
+      functionName: "startProposalsRegistering",
+      account: address,
+    });
+  };
+
   //Handle states
   return (
     <div>
@@ -166,8 +197,8 @@ const Workflow = () => {
       <Heading as="h3" size="sm" mb="1rem">
         Passer au workflow suivant
       </Heading>
-      <Button rightIcon={<ArrowForwardIcon />} width="100%" colorScheme="blue">
-        {workflowStatus === 0
+      <Button rightIcon={<ArrowForwardIcon />} width="100%" colorScheme="blue" onClick={startProposalsRegistering}>
+        {/* {workflowStatus === 0
           ? "Enregistrement des propositions"
           : workflowStatus === 1
           ? "Fin de l'enregistrement des propositions"
@@ -177,7 +208,7 @@ const Workflow = () => {
           ? "Fin de la session de vote"
           : workflowStatus === 4
           ? "Comptabilisation des votes"
-          : "Erreur"}
+          : "Erreur"} */}
       </Button>
     </div>
   );

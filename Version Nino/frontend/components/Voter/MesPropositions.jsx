@@ -36,6 +36,44 @@ function MesPropositions() {
   const {address} = useAccount();
   const [propositions, setPropositions] = useState([]);
 
+  // Events
+  const [addProposalevent, setProposalEvent] = useState([]);
+
+  const getPropoalAddedEvent = async () => {
+    const fetchEvents = async (eventSignature) => {
+      return await publicClient.getLogs({
+        address: contractAddress,
+        event: parseAbiItem(eventSignature),
+        fromBlock: 0n,
+        toBlock: "latest",
+        account: address,
+      });
+    };
+
+    const addProposalevent = await fetchEvents(
+      "event ProposalRegistered(uint proposalId)"
+    );
+    console.log(addProposalevent);
+
+    setProposalEvent(
+      addProposalevent.map((log) => ({
+        proposalId: log.args.proposalId.toString(),
+      }))
+    );
+  };
+
+  useEffect(() => {
+    const getAllEvents = async () => {
+      if (address !== "undefined") {
+        await getPropoalAddedEvent();
+      }
+    };
+    getAllEvents();
+  }, [address, addProposalevent]);
+
+
+
+
   return (
     <Flex
       direction="column"
@@ -49,7 +87,11 @@ function MesPropositions() {
       mt="1rem"
       >
         <heading>Mes Propositions</heading>
-
+        <p>
+        {addProposalevent.map((proposal, index) => (
+          <Text key={index}>{proposal.proposalId}</Text>
+        ))}
+      </p>
         </Flex>
   )
 }
