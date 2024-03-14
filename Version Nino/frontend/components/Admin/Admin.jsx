@@ -26,7 +26,7 @@ import { parseAbiItem } from "viem";
 import { contractAddress, contractAbi } from "@/constants";
 import { publicClient } from "../../utils/client";
 import Whitelist from "./Whitelist";
-import Workflow from "./Workflow0";
+import Workflow from "./Workflow";
 
 const Admin = () => {
   return (

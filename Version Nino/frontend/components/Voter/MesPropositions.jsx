@@ -55,6 +55,7 @@ function MesPropositions() {
     );
     console.log(addProposalevent);
 
+
     setProposalEvent(
       addProposalevent.map((log) => ({
         proposalId: log.args.proposalId.toString(),
