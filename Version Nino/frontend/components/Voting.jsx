@@ -1,19 +1,4 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import {
-  Flex,
-  Text,
-  Input,
-  Button,
-  useToast,
-  Heading,
-  Spinner,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-} from "@chakra-ui/react";
 // Données du contrat
 import { contractAddress, contractAbi } from "@/constants";
 
@@ -25,13 +10,7 @@ useWriteContract : Ecrire des données dans un contrat
 useWaitForTransactionReceipt : Attendre que la transaction soit confirmée (équivalent de transaction.wait() avec ethers)
 useWatchContractEvent : Récupérer en temps réel si un évènement a été émis
 */
-import {
-  useReadContract,
-  useAccount,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-  useWatchContractEvent,
-} from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 //Viem
 // Permet de parser l'event
 import { parseAbiItem } from "viem";

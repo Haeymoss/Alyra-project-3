@@ -1,11 +1,16 @@
 "use client";
+import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import {
   Flex,
   Text,
   Input,
   Button,
-  useToast,
   Heading,
   Spinner,
   Alert,
@@ -18,39 +23,34 @@ import {
   ListItem,
   ListIcon,
 } from "@chakra-ui/react";
-import {
-  useReadContract,
-  useAccount,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-  useWatchContractEvent,
-} from "wagmi";
+
 import { parseAbiItem } from "viem";
 import { contractAddress, contractAbi } from "@/constants";
 import { publicClient } from "../../utils/client";
 
-const Whitelist = () => {
+const Proposals = () => {
   const { address } = useAccount();
   const toast = useToast();
 
-  //Add Voter
-  const [registeredAddress, setRegisteredAddress] = useState("");
+  const [proposition, setProposition] = useState("");
+
+  // addProposal
   const {
     data: hash,
-    error: addVoterError,
+    error: addProposalError,
     isPending,
     writeContract,
   } = useWriteContract({
     mutation: {
       onSuccess: () => {
         toast({
-          title: "L'électeur a été ajouté avec succès",
+          title: "La proposition a été ajoutée avec succès",
           status: "success",
           duration: 3000,
           isClosable: true,
         });
-        setRegisteredAddress(""); // Réinitialiser la valeur de l'input
-        getVoterAddedEvent();
+        setProposition("");
+        getProposalRegisteredEvent();
       },
       onError: (error) => {
         toast({
@@ -63,23 +63,23 @@ const Whitelist = () => {
     },
   });
 
-  const addVoter = async () => {
+  const addProposal = async () => {
     writeContract({
-      address: contractAddress,
       abi: contractAbi,
-      functionName: "addVoter",
+      address: contractAddress,
+      functionName: "addProposal",
+      args: [proposition],
       account: address,
-      args: [registeredAddress],
     });
   };
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt(hash);
 
-  // Events
-  const [voterAddedEvent, setvoterAddedEvent] = useState([]);
+  // Get proposal events
+  const [proposalRegisteredEvent, setProposalRegisteredEvent] = useState([]);
 
-  const getVoterAddedEvent = async () => {
+  const getProposalRegisteredEvent = async () => {
     const fetchEvents = async (eventSignature) => {
       return await publicClient.getLogs({
         address: contractAddress,
@@ -90,13 +90,13 @@ const Whitelist = () => {
       });
     };
 
-    const voterAddedEvent = await fetchEvents(
-      "event VoterRegistered(address voterAddress)"
+    const proposalRegisteredLog = await fetchEvents(
+      "event ProposalRegistered(uint proposalId)"
     );
 
-    setvoterAddedEvent(
-      voterAddedEvent.map((log) => ({
-        voterAddress: log.args.voterAddress.toString(),
+    setProposalRegisteredEvent(
+      proposalRegisteredLog.map((log) => ({
+        proposalId: log.args.proposalId.toString(),
       }))
     );
   };
@@ -104,7 +104,7 @@ const Whitelist = () => {
   useEffect(() => {
     const getAllEvents = async () => {
       if (address !== "undefined") {
-        await getVoterAddedEvent();
+        await getProposalRegisteredEvent();
       }
     };
     getAllEvents();
@@ -113,25 +113,21 @@ const Whitelist = () => {
   return (
     <div>
       <Heading as="h2" size="lg" mb="2rem" align="center">
-        Whitelist
-      </Heading>
-      <Heading as="h3" size="sm" mb="1rem">
-        Ajouter un électeur
+        Faire une proposition
       </Heading>
       <Flex>
         <Input
-          placeholder="Addresse"
-          value={registeredAddress}
+          placeholder="Write a proposition"
+          value={proposition}
           onChange={(e) => {
-            setRegisteredAddress(e.target.value);
+            setProposition(e.target.value);
           }}
           mr="0.5rem"
         />
-        <Button disabled={isPending} onClick={addVoter}>
-          {isPending ? "Confirming..." : "Ajouter"}{" "}
+        <Button disabled={isPending} onClick={addProposal}>
+          {isPending ? "Confirming..." : "Add"}
         </Button>
       </Flex>
-
       <Flex direction="column">
         {hash && (
           <Alert status="success" mt="1rem" mb="1rem">
@@ -152,23 +148,23 @@ const Whitelist = () => {
             Transaction confirmed.
           </Alert>
         )}
-        {addVoterError && (
+        {addProposalError && (
           <Alert status="error" mt="1rem" mb="1rem">
             <AlertIcon />
-            Error: {addVoterError.shortMessage || addVoterError.message}
+            Error: {addProposalError.shortMessage || addProposalError.message}
           </Alert>
         )}
       </Flex>
       <Heading as="h3" size="sm" mt="2rem">
-        Liste des électeurs
+        Proposals list
       </Heading>
-      {voterAddedEvent.map((voter, index) => (
+      {proposalRegisteredEvent.map((proposal, index) => (
         <List spacing={3} key={crypto.randomUUID()}>
-          <ListItem>{voter.voterAddress}</ListItem>
+          <ListItem>Proposal : ID N°{proposal.proposalId}</ListItem>
         </List>
       ))}
     </div>
   );
 };
 
-export default Whitelist;
+export default Proposals;
