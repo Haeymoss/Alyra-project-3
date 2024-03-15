@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import {
   Flex,
   Text,
@@ -25,11 +25,12 @@ import {
   useWaitForTransactionReceipt,
   useWatchContractEvent,
 } from "wagmi";
-import { parseAbiItem } from "viem";
 import { contractAddress, contractAbi } from "@/constants";
-import { publicClient } from "../../utils/client";
+import EventsContext from "@/context/Events";
 
 const Whitelist = () => {
+  const { voterRegisteredEvent, getVoterRegisteredEvent } =
+    useContext(EventsContext);
   const { address } = useAccount();
   const toast = useToast();
 
@@ -49,8 +50,8 @@ const Whitelist = () => {
           duration: 3000,
           isClosable: true,
         });
-        setRegisteredAddress(""); // Réinitialiser la valeur de l'input
-        getVoterAddedEvent();
+        setRegisteredAddress("");
+        getVoterRegisteredEvent();
       },
       onError: (error) => {
         toast({
@@ -62,7 +63,6 @@ const Whitelist = () => {
       },
     },
   });
-
   const addVoter = async () => {
     writeContract({
       address: contractAddress,
@@ -72,43 +72,8 @@ const Whitelist = () => {
       args: [registeredAddress],
     });
   };
-
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt(hash);
-
-  // Events
-  const [voterAddedEvent, setvoterAddedEvent] = useState([]);
-
-  const getVoterAddedEvent = async () => {
-    const fetchEvents = async (eventSignature) => {
-      return await publicClient.getLogs({
-        address: contractAddress,
-        event: parseAbiItem(eventSignature),
-        fromBlock: 0n,
-        toBlock: "latest",
-        account: address,
-      });
-    };
-
-    const voterAddedEvent = await fetchEvents(
-      "event VoterRegistered(address voterAddress)"
-    );
-
-    setvoterAddedEvent(
-      voterAddedEvent.map((log) => ({
-        voterAddress: log.args.voterAddress.toString(),
-      }))
-    );
-  };
-
-  useEffect(() => {
-    const getAllEvents = async () => {
-      if (address !== "undefined") {
-        await getVoterAddedEvent();
-      }
-    };
-    getAllEvents();
-  }, [address]);
 
   return (
     <div>
@@ -162,7 +127,7 @@ const Whitelist = () => {
       <Heading as="h3" size="sm" mt="2rem">
         Liste des électeurs
       </Heading>
-      {voterAddedEvent.map((voter, index) => (
+      {voterRegisteredEvent.map((voter, index) => (
         <List spacing={3} key={crypto.randomUUID()}>
           <ListItem>{voter.voterAddress}</ListItem>
         </List>

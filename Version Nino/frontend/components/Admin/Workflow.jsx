@@ -1,62 +1,69 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
-  Flex,
-  Text,
-  Input,
   Button,
-  useToast,
+  Divider,
+  Flex,
   Heading,
-  Spinner,
+  Badge,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useToast,
+  StepIcon,
+  StepNumber,
   Alert,
   AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Grid,
-  GridItem,
-  Badge,
-  Divider,
-  TableContainer,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
 } from "@chakra-ui/react";
-import {
-  useReadContract,
-  useAccount,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-  useWatchContractEvent,
-} from "wagmi";
-import { parseAbiItem } from "viem";
-import { contractAddress, contractAbi } from "@/constants";
-import { publicClient } from "../../utils/client";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
+import {
+  useSteps,
+  Step,
+  Stepper,
+  StepTitle,
+  StepDescription,
+  StepIndicator,
+  StepStatus,
+  StepSeparator,
+} from "@chakra-ui/react";
+import EventsContext from "@/context/Events";
+import { contractAddress, contractAbi } from "@/constants";
+import {
+  useAccount,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 
 const Workflow = () => {
   const { address } = useAccount();
   const toast = useToast();
-  const { worflowstep, setWorkflowStep } = useState(0);
+  const steps = [
+    { title: "Enregistrement des électeurs", description: "Register Voters" },
+    {
+      title: "Enregistrement des propositions",
+      description: "Register Proposals",
+    },
+    {
+      title: "Fin de l'enregistrement des propositions",
+      description: "End of Registration of Proposals",
+    },
+    { title: "Session de vote", description: "Voting Session" },
+    {
+      title: "Fin de la session de vote",
+      description: "End of Voting Session",
+    },
+    { title: "Comptabilisation des votes", description: "Vote Tallying" },
+  ];
 
-  //Get workflowStatus
-  const { data: workflowStatus } = useReadContract({
-    address: contractAddress,
-    abi: contractAbi,
-    functionName: "workflowStatus",
-  });
-
-  // useEffect(() => {
-  // }, []);
-
+  // Récupération du smart contract
+  // Write the workflow status
   const {
     data: hash,
-    isPending,
+    error: changedWorkflowError,
     writeContract,
   } = useWriteContract({
     mutation: {
@@ -67,7 +74,7 @@ const Workflow = () => {
           duration: 3000,
           isClosable: true,
         });
-        setWorkflowStep(worflowstep + 1);
+        refetch();
       },
       onError: (error) => {
         toast({
@@ -125,253 +132,121 @@ const Workflow = () => {
     });
   };
 
-  //Handle states
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt(hash);
+
+  // Read the workflow status
+  const {
+    data: workflowStatus,
+    error: getWorkflowStatusError,
+    isPending: getWorflowStatusIsPending,
+    refetch,
+  } = useReadContract({
+    address: contractAddress,
+    abi: contractAbi,
+    functionName: "workflowStatus",
+  });
+
+  const handleNextWorkflow = async () => {
+    const workflowFunctions = [
+      startProposalsRegistering,
+      endProposalsRegistering,
+      startVotingSession,
+      endVotingSession,
+      tallyVotes,
+    ];
+
+    const currentWorkflowFunction = workflowFunctions[workflowStatus];
+
+    if (currentWorkflowFunction) {
+      try {
+        await currentWorkflowFunction();
+      } catch (error) {
+        toast({
+          title: error.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } else {
+      toast({
+        title: "Vous avez atteint le dernier workflow.",
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <div>
       <Heading as="h2" size="lg" mb="2rem" align="center">
         Workflow
       </Heading>
-      <Heading as="h3" size="sm" mb="1rem">
-        Workflow actuel
-      </Heading>
-      <Badge
-        fontSize="lg"
-        width="100%"
-        align="center"
-        padding="5px"
-        variant="outline"
-        colorScheme="green"
-      >
-        {workflowStatus === 0
-          ? "Enregistrement des électeurs"
-          : workflowStatus === 1
-          ? "Enregistrement des propositions en cours"
-          : workflowStatus === 2
-          ? "Enregistrement des propositions terminées"
-          : workflowStatus === 3
-          ? "Session de vote en cours"
-          : workflowStatus === 4
-          ? "Session de vote terminée"
-          : workflowStatus === 5
-          ? "Comptabilisation des votes"
-          : "Erreur"}
-      </Badge>
-      <Divider orientation="horizontal" mt="1rem" mb="1rem" />
-      <Heading as="h3" size="sm" mb="1rem">
-        Liste des workflows
-      </Heading>
-      <TableContainer>
-        <Table variant="unstyled">
-          <Thead>
-            <Tr>
-              <Th>Id</Th>
-              <Th>Workflows</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            <Tr>
-              <Td>0</Td>
-              <Td>
-                {workflowStatus === 0 ? (
-                  <Badge colorScheme="white">
-                    <Flex direction="column" align="center" justify="center">
-                      <Flex
-                        direction="column"
-                        align="center"
-                        justify="center"
-                        border="1px"
-                        borderColor="gray.200"
-                        borderRadius="md"
-                        p="2"
-                        mb="8px"
-                      >
-                        <heading>Enregistrement des électeurs</heading>
-                      </Flex>
+      <Flex direction="column">
+        {hash && (
+          <Alert status="success" mt="1rem" mb="1rem">
+            <AlertIcon />
+            Hash de la dernière transaction : {hash.substring(0, 6)}...
+            {hash.substring(hash.length - 4)}
+          </Alert>
+        )}
+        {isConfirming && (
+          <Alert status="success" mt="1rem" mb="1rem">
+            <AlertIcon />
+            Waiting for confirmation...
+          </Alert>
+        )}
+        {isConfirmed && (
+          <Alert status="success" mt="1rem" mb="1rem">
+            <AlertIcon />
+            Transaction confirmed.
+          </Alert>
+        )}
+        {changedWorkflowError && (
+          <Alert status="error" mt="1rem" mb="1rem">
+            <AlertIcon />
+            Error:{" "}
+            {changedWorkflowError.shortMessage || changedWorkflowError.message}
+          </Alert>
+        )}
+      </Flex>
+      <Flex direction="column" alignItems="center">
+        <Box mb="2rem">
+          <Stepper
+            index={workflowStatus}
+            orientation="vertical"
+            height="400px"
+            gap="0"
+          >
+            {steps.map((step, index) => (
+              <Step key={index}>
+                <StepIndicator>
+                  <StepStatus
+                    complete={<StepIcon />}
+                    incomplete={<StepNumber />}
+                    active={<StepNumber />}
+                  />
+                </StepIndicator>
+                <Box flexShrink="0">
+                  <StepTitle>{step.title}</StepTitle>
+                  <StepDescription>{step.description}</StepDescription>
+                </Box>
 
-                      <Button
-                        rightIcon={<ArrowForwardIcon />}
-                        colorScheme="blue"
-                        onClick={() => {
-                          startProposalsRegistering();
-                        }}
-                      >
-                        {" "}
-                        Passer au workflow suivant
-                      </Button>
-                    </Flex>
-                  </Badge>
-                ) : (
-                  <Badge colorScheme="white">
-                    Enregistrement des électeurs
-                  </Badge>
-                )}
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>1</Td>
-              <Td>
-                {workflowStatus === 1 ? (
-                  <Badge colorScheme="white">
-                    <Flex direction="column" align="center" justify="center">
-                      <Flex
-                        direction="column"
-                        align="center"
-                        justify="center"
-                        border="1px"
-                        borderColor="gray.200"
-                        borderRadius="md"
-                        p="2"
-                        mb="8px"
-                      >
-                        <heading>
-                          Enregistrement des propositions en cours
-                        </heading>
-                      </Flex>
-
-                      <Button
-                        rightIcon={<ArrowForwardIcon />}
-                        colorScheme="blue"
-                        onClick={() => {
-                          endProposalsRegistering();
-                        }}
-                      >
-                        {" "}
-                        Passer au workflow suivant
-                      </Button>
-                    </Flex>
-                  </Badge>
-                ) : (
-                  <Badge colorScheme="white">
-                    Enregistrement des propositions en cours
-                  </Badge>
-                )}
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>2</Td>
-              <Td>
-                {workflowStatus === 2 ? (
-                  <Badge colorScheme="white">
-                    <Flex direction="column" align="center" justify="center">
-                      <Flex
-                        direction="column"
-                        align="center"
-                        justify="center"
-                        border="1px"
-                        borderColor="gray.200"
-                        borderRadius="md"
-                        p="2"
-                        mb="8px"
-                      >
-                        <heading>
-                          Enregistrement des propositions terminées
-                        </heading>
-                      </Flex>
-
-                      <Button
-                        rightIcon={<ArrowForwardIcon />}
-                        colorScheme="blue"
-                        onClick={() => {
-                          startVotingSession();
-                        }}
-                      >
-                        {" "}
-                        Passer au workflow suivant
-                      </Button>
-                    </Flex>
-                  </Badge>
-                ) : (
-                  <Badge colorScheme="white">
-                    Enregistrement des propositions terminées
-                  </Badge>
-                )}
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>3</Td>
-              <Td>
-                {workflowStatus === 3 ? (
-                  <Badge colorScheme="white">
-                    <Flex direction="column" align="center" justify="center">
-                      <Flex
-                        direction="column"
-                        align="center"
-                        justify="center"
-                        border="1px"
-                        borderColor="gray.200"
-                        borderRadius="md"
-                        p="2"
-                        mb="8px"
-                      >
-                        <heading>Session de vote en cours</heading>
-                      </Flex>
-
-                      <Button
-                        rightIcon={<ArrowForwardIcon />}
-                        colorScheme="blue"
-                        onClick={() => {
-                          endVotingSession();
-                        }}
-                      >
-                        {" "}
-                        Passer au workflow suivant
-                      </Button>
-                    </Flex>
-                  </Badge>
-                ) : (
-                  <Badge colorScheme="white">Session de vote en cours</Badge>
-                )}
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>4</Td>
-              <Td>
-                {workflowStatus === 4 ? (
-                  <Badge colorScheme="white">
-                    <Flex direction="column" align="center" justify="center">
-                      <Flex
-                        direction="column"
-                        align="center"
-                        justify="center"
-                        border="1px"
-                        borderColor="gray.200"
-                        borderRadius="md"
-                        p="2"
-                        mb="8px"
-                      >
-                        <heading>Session de vote terminée</heading>
-                      </Flex>
-
-                      <Button
-                        rightIcon={<ArrowForwardIcon />}
-                        colorScheme="blue"
-                        onClick={() => {
-                          tallyVotes();
-                        }}
-                      >
-                        {" "}
-                        Passer au workflow suivant
-                      </Button>
-                    </Flex>
-                  </Badge>
-                ) : (
-                  <Badge colorScheme="white">Session de vote terminée</Badge>
-                )}
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>5</Td>
-              <Td>
-                {workflowStatus === 5 ? (
-                  <Badge colorScheme="green">Comptabilisation des votes</Badge>
-                ) : (
-                  <Badge>Comptabilisation des votes</Badge>
-                )}
-              </Td>
-            </Tr>
-          </Tbody>
-        </Table>
-      </TableContainer>
+                <StepSeparator />
+              </Step>
+            ))}
+          </Stepper>
+        </Box>
+        <Button
+          rightIcon={<ArrowForwardIcon />}
+          colorScheme="blue"
+          onClick={handleNextWorkflow}
+        >
+          Passer au workflow suivant
+        </Button>
+      </Flex>
       <Divider orientation="horizontal" mt="1rem" mb="1rem" />
     </div>
   );
