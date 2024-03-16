@@ -1,3 +1,5 @@
+/** @format */
+
 `use client`;
 
 import React, { useContext, useState } from "react";
@@ -23,10 +25,16 @@ import {
 } from "@chakra-ui/react";
 
 import { publicClient } from "../../utils/client";
-import { useReadContract, useAccount, useWriteContract, useWaitForTransactionReceipt, useWatchContractEvent } from "wagmi";
+import {
+    useReadContract,
+    useAccount,
+    useWriteContract,
+    useWaitForTransactionReceipt,
+    useWatchContractEvent,
+} from "wagmi";
 import { contractAddress, contractAbi } from "@/constants";
 import { parseAbiItem } from "viem";
-
+import { confetti } from "@/utils/confetis";
 
 function ProposalModal() {
     const OverlayOne = () => (
@@ -37,7 +45,7 @@ function ProposalModal() {
     );
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [overlay, setOverlay] = React.useState(<OverlayOne />);
-    
+
     const { address } = useAccount();
     const toast = useToast();
     const [results, setresults] = useState("");
@@ -46,7 +54,6 @@ function ProposalModal() {
         abi: contractAbi,
         functionName: "winningProposalID",
     });
-
 
     return (
         <>
@@ -57,16 +64,19 @@ function ProposalModal() {
                     onOpen();
                 }}
             >
-                Afficher l'Id de la proposition gagnante 
+                Afficher l'Id de la proposition gagnante
             </Button>
             <Modal isOpen={isOpen} size={"2xl"} onClose={onClose}>
                 {overlay}
                 <ModalContent>
-                    <ModalHeader >Vainqueur</ModalHeader>
+                    <ModalHeader>Vainqueur</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <Flex align="center" justify="center">
-                          {winner !== undefined ? `La proposition gagnante est la numéro : ${winner}` : 'Chargement...'}
+                            {winner !== undefined
+                                ? `La proposition gagnante est la numéro : ${winner}`
+                                : "Chargement..."}
+                            {confetti()}
                         </Flex>
                     </ModalBody>
 
