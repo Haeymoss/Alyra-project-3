@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Flex,
   Text,
@@ -28,12 +28,14 @@ import {
 import { parseAbiItem } from "viem";
 import { contractAddress, contractAbi } from "@/constants";
 import { publicClient } from "../../utils/client";
+import EventsContext from "@/context/Events";
 
 const Vote = () => {
   const { address } = useAccount();
   const toast = useToast();
+  const { votedEvent, getVotedEvent } = useContext(EventsContext);
 
-  //Vote
+  // setVote
   const [voteId, setVoteId] = useState("");
   const {
     data: hash,
@@ -49,6 +51,7 @@ const Vote = () => {
           duration: 3000,
           isClosable: true,
         });
+        getVotedEvent();
       },
       onError: (error) => {
         toast({
@@ -73,41 +76,6 @@ const Vote = () => {
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt(hash);
-
-  // Event voted
-  const [voteEvent, setVoteEvent] = useState([]);
-
-  const getVoteEvents = async () => {
-    const fetchEvents = async (eventSignature) => {
-      return await publicClient.getLogs({
-        address: contractAddress,
-        event: parseAbiItem(eventSignature),
-        fromBlock: 0n,
-        toBlock: "latest",
-        account: address,
-      });
-    };
-
-    const voteEventLog = await fetchEvents(
-      "event Voted(address voter, uint proposalId)"
-    );
-
-    setVoteEvent(
-      voteEventLog.map((log) => ({
-        voter: log.args.voter.toString(),
-        proposalId: log.args.proposalId.toString(),
-      }))
-    );
-  };
-
-  useEffect(() => {
-    const getAllEvents = async () => {
-      if (address !== "undefined") {
-        await getVoteEvents();
-      }
-    };
-    getAllEvents();
-  }, [address]);
 
   return (
     <div>
@@ -163,7 +131,7 @@ const Vote = () => {
       <Heading as="h3" size="sm" mt="2rem">
         Vote réalisé
       </Heading>
-      {voteEvent.map((vote, index) => (
+      {votedEvent.map((vote, index) => (
         <List spacing={3} key={crypto.randomUUID()}>
           <ListItem>
             {vote.voter} à voter pour la proposition N°

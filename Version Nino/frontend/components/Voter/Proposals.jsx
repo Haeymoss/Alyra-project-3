@@ -1,6 +1,6 @@
 "use client";
 import { useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   useAccount,
   useWaitForTransactionReceipt,
@@ -27,14 +27,17 @@ import {
 import { parseAbiItem } from "viem";
 import { contractAddress, contractAbi } from "@/constants";
 import { publicClient } from "../../utils/client";
+import EventsContext from "@/context/Events";
 
 const Proposals = () => {
   const { address } = useAccount();
   const toast = useToast();
-
-  const [proposition, setProposition] = useState("");
+  const { proposalRegisteredEvent, getProposalRegisteredEvent } =
+    useContext(EventsContext);
 
   // addProposal
+  const [proposition, setProposition] = useState("");
+
   const {
     data: hash,
     error: addProposalError,
@@ -75,40 +78,6 @@ const Proposals = () => {
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt(hash);
-
-  // Get proposal events
-  const [proposalRegisteredEvent, setProposalRegisteredEvent] = useState([]);
-
-  const getProposalRegisteredEvent = async () => {
-    const fetchEvents = async (eventSignature) => {
-      return await publicClient.getLogs({
-        address: contractAddress,
-        event: parseAbiItem(eventSignature),
-        fromBlock: 0n,
-        toBlock: "latest",
-        account: address,
-      });
-    };
-
-    const proposalRegisteredLog = await fetchEvents(
-      "event ProposalRegistered(uint proposalId)"
-    );
-
-    setProposalRegisteredEvent(
-      proposalRegisteredLog.map((log) => ({
-        proposalId: log.args.proposalId.toString(),
-      }))
-    );
-  };
-
-  useEffect(() => {
-    const getAllEvents = async () => {
-      if (address !== "undefined") {
-        await getProposalRegisteredEvent();
-      }
-    };
-    getAllEvents();
-  }, [address]);
 
   return (
     <div>

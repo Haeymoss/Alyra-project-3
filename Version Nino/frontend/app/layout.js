@@ -2,6 +2,7 @@ import RainbowKitAndChakraProvider from "./RainbowKitAndChakraProvider";
 import { Inter } from "next/font/google";
 
 import Layout from "@/components/Layout";
+import { EventsProvider } from "@/context/Events";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,10 +16,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <RainbowKitAndChakraProvider>
-          <Layout>
-            {children}
-          </Layout>
-        </RainbowKitAndChakraProvider>    
+          <EventsProvider>
+            <Layout>{children}</Layout>
+          </EventsProvider>
+        </RainbowKitAndChakraProvider>
       </body>
     </html>
   );
