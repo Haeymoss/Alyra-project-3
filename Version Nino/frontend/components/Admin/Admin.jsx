@@ -27,6 +27,7 @@ import { contractAddress, contractAbi } from "@/constants";
 import { publicClient } from "../../utils/client";
 import Whitelist from "./Whitelist";
 import Workflow from "./Workflow";
+import Results from "./Results";
 
 const Admin = () => {
   return (
@@ -42,9 +43,7 @@ const Admin = () => {
           <Workflow />
         </GridItem>
         <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">
-          <Heading as="h2" size="lg" mb="1rem" align="center">
-            Résultats
-          </Heading>
+          <Results />
         </GridItem>
       </Grid>
     </Flex>

@@ -10,7 +10,7 @@ const EventsContext = createContext();
 export const EventsProvider = ({ children }) => {
   const { address } = useAccount();
 
-  // Fonction for fetching events
+  // Function for fetching events
   const fetchEvents = async (eventSignature) => {
     return await publicClient.getLogs({
       address: contractAddress,

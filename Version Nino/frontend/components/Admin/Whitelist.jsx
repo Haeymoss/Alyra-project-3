@@ -29,13 +29,14 @@ import { contractAddress, contractAbi } from "@/constants";
 import EventsContext from "@/context/Events";
 
 const Whitelist = () => {
-  const { voterRegisteredEvent, getVoterRegisteredEvent } =
-    useContext(EventsContext);
   const { address } = useAccount();
   const toast = useToast();
+  const { voterRegisteredEvent, getVoterRegisteredEvent } =
+    useContext(EventsContext);
 
   //Add Voter
   const [registeredAddress, setRegisteredAddress] = useState("");
+
   const {
     data: hash,
     error: addVoterError,
