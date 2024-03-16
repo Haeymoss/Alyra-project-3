@@ -14,7 +14,12 @@ import {
   AlertDescription,
   Grid,
   GridItem,
+  Avatar,
+  IconButton,
+  Box,
 } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import {
   useReadContract,
   useAccount,
@@ -32,20 +37,49 @@ import Results from "./Results";
 const Admin = () => {
   return (
     <Flex direction="column" width="100%">
-      <Heading as="h1" size="xl" mb="2rem">
-        Bonjour cher administrateur...
-      </Heading>
-      <Grid templateColumns="1fr 1fr 1fr" gap={4} height="100%">
-        <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">
-          <Whitelist />
-        </GridItem>
-        <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">
-          <Workflow />
-        </GridItem>
-        <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">
-          <Results />
-        </GridItem>
-      </Grid>
+      <Tabs>
+        <TabList>
+          <Tab>Home</Tab>
+          <Tab>Voters</Tab>
+          <Tab>Proposals</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <Grid templateColumns="1fr 1fr 1fr" gap={4} height="100%">
+              <GridItem
+                colSpan={1}
+                p="1rem"
+                borderRadius="10px"
+                border="solid 1px"
+              >
+                <Whitelist />
+              </GridItem>
+              <GridItem
+                colSpan={1}
+                p="1rem"
+                borderRadius="10px"
+                border="solid 1px"
+              >
+                <Workflow />
+              </GridItem>
+              <GridItem
+                colSpan={1}
+                p="1rem"
+                borderRadius="10px"
+                border="solid 1px"
+              >
+                <Results />
+              </GridItem>
+            </Grid>
+          </TabPanel>
+          <TabPanel>
+            <Whitelist />
+          </TabPanel>
+          <TabPanel>
+            <Results />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Flex>
   );
 };
