@@ -21,18 +21,16 @@ import { publicClient } from "../utils/client";
 // Components
 import Admin from "./Admin/Admin";
 import Voter from "./Voter/Voter";
+import ReadFunctionsContext from "@/context/ReadFunctions";
+import { useContext } from "react";
+import { Flex } from "@chakra-ui/react";
 
 const Voting = () => {
   const { address } = useAccount();
-
-  const { data: ownerAddress } = useReadContract({
-    address: contractAddress,
-    abi: contractAbi,
-    functionName: "owner",
-  });
+  const { ownerAddress } = useContext(ReadFunctionsContext);
 
   return (
-    <>
+    <Flex width="100%" pl="5rem" pr="5rem">
       {address === ownerAddress ? (
         <>
           <Admin />
@@ -42,7 +40,7 @@ const Voting = () => {
           <Voter />
         </>
       )}
-    </>
+    </Flex>
   );
 };
 

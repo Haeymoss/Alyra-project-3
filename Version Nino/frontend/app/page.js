@@ -11,7 +11,7 @@ import Voting from "@/components/Voting";
 export default function Home() {
   // On récupère l'adresse du compte qui est connecté à la DApp
   // On récupère aussi s'il y a qqn connecté ou pas
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
 
   return (
     <>
