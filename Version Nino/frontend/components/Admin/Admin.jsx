@@ -29,6 +29,7 @@ import Whitelist from "./Whitelist";
 import Workflow from "./Workflow";
 import Results from "./Results";
 
+
 const Admin = () => {
   return (
     <Flex direction="column" width="100%">
@@ -44,6 +45,7 @@ const Admin = () => {
         </GridItem>
         <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">
           <Results />
+
         </GridItem>
       </Grid>
     </Flex>

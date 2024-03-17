@@ -2,7 +2,7 @@
 
 `use client`;
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import {
     Box,
@@ -12,6 +12,7 @@ import {
     FormLabel,
     Lorem,
     Modal,
+    useToast,
     ModalBody,
     ModalCloseButton,
     ModalContent,
@@ -36,6 +37,7 @@ import { contractAddress, contractAbi } from "@/constants";
 import { parseAbiItem } from "viem";
 import { confetti } from "@/utils/confetis";
 
+
 function ProposalModal() {
     const OverlayOne = () => (
         <ModalOverlay
@@ -43,6 +45,9 @@ function ProposalModal() {
             backdropFilter="blur(10px) hue-rotate(2deg)"
         />
     );
+
+    
+
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [overlay, setOverlay] = React.useState(<OverlayOne />);
 
@@ -55,39 +60,42 @@ function ProposalModal() {
         functionName: "winningProposalID",
     });
 
+    const [showConfetti, setShowConfetti] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+          setShowConfetti(true); // Active le confetti à l'ouverture de la modale
+        } else {
+          setShowConfetti(false); // Désactive le confetti à la fermeture de la modale
+        }
+      }, [isOpen]);
+
     return (
         <>
-            <Button
-                mt={4}
-                onClick={() => {
-                    setOverlay(<OverlayOne />);
-                    onOpen();
-                }}
-            >
-                Afficher l'Id de la proposition gagnante
-            </Button>
-            <Modal isOpen={isOpen} size={"2xl"} onClose={onClose}>
-                {overlay}
-                <ModalContent>
-                    <ModalHeader>Vainqueur</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Flex align="center" justify="center">
-                            {winner !== undefined
-                                ? `La proposition gagnante est la numéro : ${winner}`
-                                : "Chargement..."}
-                            {confetti()}
-                        </Flex>
-                    </ModalBody>
+      <Button mt={4} onClick={onOpen}>
+        Afficher l'Id de la proposition gagnante
+      </Button>
+      <Modal isOpen={isOpen} size={"2xl"} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader>Vainqueur</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Flex align="center" justify="center">
+              {winner !== undefined
+                ? `La proposition gagnante est la numéro : ${winner}`
+                : "Chargement..."}
+              {showConfetti && confetti()}
+            </Flex>
+          </ModalBody>
 
-                    <ModalFooter>
-                        <Button colorScheme="red" mr={3} onClick={onClose}>
-                            Fermer
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-        </>
+          <ModalFooter>
+            <Button colorScheme="red" mr={3} onClick={onClose}>
+              Fermer
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
     );
 }
 

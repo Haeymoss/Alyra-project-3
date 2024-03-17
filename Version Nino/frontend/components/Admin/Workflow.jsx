@@ -38,6 +38,8 @@ import {
   useWriteContract,
 } from "wagmi";
 
+import ProposalModal from "./ProposalModal";
+
 const Workflow = () => {
   const { address } = useAccount();
   const toast = useToast();
@@ -158,6 +160,8 @@ const Workflow = () => {
 
     const currentWorkflowFunction = workflowFunctions[workflowStatus];
 
+
+
     if (currentWorkflowFunction) {
       try {
         await currentWorkflowFunction();
@@ -169,7 +173,8 @@ const Workflow = () => {
           isClosable: true,
         });
       }
-    } else {
+    }
+     else {
       toast({
         title: "Vous avez atteint le dernier workflow.",
         status: "info",
@@ -178,6 +183,7 @@ const Workflow = () => {
       });
     }
   };
+
 
   return (
     <div>
@@ -239,13 +245,21 @@ const Workflow = () => {
             ))}
           </Stepper>
         </Box>
-        <Button
-          rightIcon={<ArrowForwardIcon />}
-          colorScheme="blue"
-          onClick={handleNextWorkflow}
-        >
-          Passer au workflow suivant
-        </Button>
+
+        {workflowStatus === 5  ? (
+            <ProposalModal />
+
+        ) : (
+          <Button
+            rightIcon={<ArrowForwardIcon />}
+            colorScheme="blue"
+            onClick={handleNextWorkflow}
+          >
+            Passer au workflow suivant
+          </Button>
+        )}
+
+
       </Flex>
       <Divider orientation="horizontal" mt="1rem" mb="1rem" />
     </div>
