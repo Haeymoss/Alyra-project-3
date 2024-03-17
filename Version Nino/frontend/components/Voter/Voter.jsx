@@ -7,6 +7,7 @@ import {
   Button,
   useToast,
   Heading,
+  Center,
   Spinner,
   Alert,
   AlertIcon,
@@ -14,6 +15,7 @@ import {
   AlertDescription,
   Grid,
   GridItem,
+  Modal,
 } from "@chakra-ui/react";
 import {
   useReadContract,
@@ -27,6 +29,7 @@ import { contractAddress, contractAbi } from "@/constants";
 import { publicClient } from "../../utils/client";
 import Proposals from "./Proposals";
 import Vote from "./Vote";
+import ProposalModal from "../Admin/ProposalModal";
 
 const Voter = () => {
   const { address } = useAccount();
@@ -57,6 +60,11 @@ const Voter = () => {
         </GridItem>
         <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">
           <Vote />
+        </GridItem>
+        <GridItem colSpan={1} p="1rem" borderRadius="10px" border="solid 1px">
+          <Center h='180px'>
+          <ProposalModal />
+          </Center>
         </GridItem>
       </Grid>
     </Flex>

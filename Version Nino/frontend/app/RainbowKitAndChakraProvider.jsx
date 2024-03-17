@@ -17,7 +17,7 @@ import {
 
 const config = getDefaultConfig({
     appName: 'walletTest Project ',
-    projectId: 'b02510094b8a5edf2be444f3e7902804',
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     chains: [sepolia],
     ssr: true, // If your dApp uses server side rendering (SSR)
 });
