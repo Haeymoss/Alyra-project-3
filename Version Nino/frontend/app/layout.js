@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Layout from "@/components/Layout";
 import { EventsProvider } from "@/context/Events";
 import { extendTheme } from "@chakra-ui/react";
+import { ReadFunctionsProvider } from "@/context/ReadFunctions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,9 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <RainbowKitAndChakraProvider>
           <EventsProvider>
-            <Layout>{children}</Layout>
+            <ReadFunctionsProvider>
+              <Layout>{children}</Layout>
+            </ReadFunctionsProvider>
           </EventsProvider>
         </RainbowKitAndChakraProvider>
       </body>

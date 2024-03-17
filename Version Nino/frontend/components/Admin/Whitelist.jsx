@@ -27,12 +27,15 @@ import {
 } from "wagmi";
 import { contractAddress, contractAbi } from "@/constants";
 import EventsContext from "@/context/Events";
+import { InfoOutlineIcon } from "@chakra-ui/icons";
+import ReadFunctionsContext from "@/context/ReadFunctions";
 
 const Whitelist = () => {
   const { address } = useAccount();
   const toast = useToast();
   const { voterRegisteredEvent, getVoterRegisteredEvent } =
     useContext(EventsContext);
+  // const { voter, refetchVoter } = useContext(ReadFunctionsContext);
 
   //Add Voter
   const [registeredAddress, setRegisteredAddress] = useState("");
@@ -78,15 +81,19 @@ const Whitelist = () => {
 
   return (
     <div>
-      <Heading as="h2" size="lg" mb="2rem" align="center">
+      {/* <Heading as="h2" size="lg" mb="2rem" align="center">
         Whitelist
-      </Heading>
-      <Heading as="h3" size="sm" mb="1rem">
-        Ajouter un électeur
-      </Heading>
+      </Heading> */}
+
+      <Flex mb="1rem">
+        <Heading as="h3" size="sm">
+          Register a voter
+        </Heading>
+        <InfoOutlineIcon alignSelf="center" ml="0.5rem" />
+      </Flex>
       <Flex>
         <Input
-          placeholder="Addresse"
+          placeholder="Address : 0x..."
           value={registeredAddress}
           onChange={(e) => {
             setRegisteredAddress(e.target.value);
@@ -125,8 +132,8 @@ const Whitelist = () => {
           </Alert>
         )}
       </Flex>
-      <Heading as="h3" size="sm" mt="2rem">
-        Liste des électeurs
+      <Heading as="h3" size="sm" mt="2rem" mb={"0.5rem"}>
+        Whitelisted voters
       </Heading>
       {voterRegisteredEvent.map((voter, index) => (
         <List spacing={3} key={crypto.randomUUID()}>

@@ -2,11 +2,14 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import {
+  getDefaultConfig,
+  RainbowKitProvider,
+  darkTheme,
+} from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
 import { hardhat } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import darkTheme from "./darkTheme";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
@@ -21,7 +24,7 @@ const RainbowKitAndChakraProvider = ({ children }) => {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+        <RainbowKitProvider theme={darkTheme()}>
           <ChakraProvider>{children}</ChakraProvider>
         </RainbowKitProvider>
       </QueryClientProvider>

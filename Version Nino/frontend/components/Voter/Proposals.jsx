@@ -28,6 +28,7 @@ import { parseAbiItem } from "viem";
 import { contractAddress, contractAbi } from "@/constants";
 import { publicClient } from "../../utils/client";
 import EventsContext from "@/context/Events";
+import Results from "../Results";
 
 const Proposals = () => {
   const { address } = useAccount();
@@ -81,8 +82,8 @@ const Proposals = () => {
 
   return (
     <div>
-      <Heading as="h2" size="lg" mb="2rem" align="center">
-        Faire une proposition
+      <Heading as="h3" size="sm" mb="1rem">
+        Register one proposal or more
       </Heading>
       <Flex>
         <Input
@@ -97,7 +98,7 @@ const Proposals = () => {
           {isPending ? "Confirming..." : "Add"}
         </Button>
       </Flex>
-      <Flex direction="column">
+      <Flex direction="column" mb={"2rem"}>
         {hash && (
           <Alert status="success" mt="1rem" mb="1rem">
             <AlertIcon />
@@ -124,14 +125,7 @@ const Proposals = () => {
           </Alert>
         )}
       </Flex>
-      <Heading as="h3" size="sm" mt="2rem">
-        Proposals list
-      </Heading>
-      {proposalRegisteredEvent.map((proposal, index) => (
-        <List spacing={3} key={crypto.randomUUID()}>
-          <ListItem>Proposal : ID N°{proposal.proposalId}</ListItem>
-        </List>
-      ))}
+      <Results />
     </div>
   );
 };

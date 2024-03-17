@@ -1,23 +1,17 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import {
   Flex,
-  Text,
   Input,
   Button,
   useToast,
   Heading,
-  Spinner,
   Alert,
   AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Grid,
-  GridItem,
   List,
   ListItem,
-  ListIcon,
 } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import {
   useReadContract,
   useAccount,
@@ -33,7 +27,8 @@ import EventsContext from "@/context/Events";
 const Vote = () => {
   const { address } = useAccount();
   const toast = useToast();
-  const { votedEvent, getVotedEvent } = useContext(EventsContext);
+  const { votedEvent, getVotedEvent, voterRegisteredEvent } =
+    useContext(EventsContext);
 
   // setVote
   const [voteId, setVoteId] = useState("");
@@ -79,18 +74,14 @@ const Vote = () => {
 
   return (
     <div>
-      {" "}
-      <Heading as="h2" size="lg" mb="2rem" align="center">
-        Voter pour une proposition
-      </Heading>
       <Heading as="h3" size="sm" mb="1rem">
-        Choisir un vote
+        Make your vote
       </Heading>
       <Flex>
         <Input
           value={voteId}
           onChange={(e) => setVoteId(e.target.value)}
-          placeholder="ID du vote"
+          placeholder="Proposal ID"
           mr="2"
         />
         <Button
@@ -128,17 +119,22 @@ const Vote = () => {
           </Alert>
         )}
       </Flex>
-      <Heading as="h3" size="sm" mt="2rem">
-        Vote réalisé
-      </Heading>
-      {votedEvent.map((vote, index) => (
-        <List spacing={3} key={crypto.randomUUID()}>
-          <ListItem>
-            {vote.voter} à voter pour la proposition N°
-            {vote.proposalId}
-          </ListItem>
-        </List>
-      ))}
+      <Table variant="striped" mt={"2rem"}>
+        <Thead>
+          <Tr>
+            <Th pl={"0px"}>Voter</Th>
+            <Th pl={"0px"}>Proposal voted</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {votedEvent.map((vote, index) => (
+            <Tr key={index}>
+              <Td width="70%">{vote.voter}</Td>
+              <Td width="30%">Proposal n°{vote.proposalId}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
     </div>
   );
 };

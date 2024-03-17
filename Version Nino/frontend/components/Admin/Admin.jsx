@@ -1,87 +1,91 @@
 "use client";
-import { useEffect, useState } from "react";
-import {
-  Flex,
-  Text,
-  Input,
-  Button,
-  useToast,
-  Heading,
-  Spinner,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Grid,
-  GridItem,
-  Avatar,
-  IconButton,
-  Box,
-} from "@chakra-ui/react";
+import { Flex, Heading, Grid, GridItem } from "@chakra-ui/react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
-import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
-import {
-  useReadContract,
-  useAccount,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-  useWatchContractEvent,
-} from "wagmi";
-import { parseAbiItem } from "viem";
-import { contractAddress, contractAbi } from "@/constants";
-import { publicClient } from "../../utils/client";
 import Whitelist from "./Whitelist";
 import Workflow from "./Workflow";
-import Results from "./Results";
+import Results from "../Results";
+import VotingInfos from "../VotingInfos";
 
 const Admin = () => {
   return (
-    <Flex direction="column" width="100%">
-      <Tabs>
-        <TabList>
-          <Tab>Home</Tab>
-          <Tab>Voters</Tab>
-          <Tab>Proposals</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <Grid templateColumns="1fr 1fr 1fr" gap={4} height="100%">
-              <GridItem
-                colSpan={1}
-                p="1rem"
-                borderRadius="10px"
-                border="solid 1px"
-              >
+    <Flex direction="column" width="100%" alignItems="center">
+      <Heading size="xl" mb="2rem">
+        Admin Dashboard
+      </Heading>
+      <Grid
+        templateColumns="2fr 1fr"
+        templateRows="1fr auto"
+        gap={4}
+        width="1200px"
+      >
+        {/* Whitelist & proposals */}
+        <GridItem p="1rem" borderRadius="0.5rem" border="solid 1px" rowSpan={5}>
+          <Tabs>
+            <TabList>
+              <Tab>Manage Voters</Tab>
+              <Tab>See proposals & results</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel p="1rem" mt="1rem">
                 <Whitelist />
-              </GridItem>
-              <GridItem
-                colSpan={1}
-                p="1rem"
-                borderRadius="10px"
-                border="solid 1px"
-              >
-                <Workflow />
-              </GridItem>
-              <GridItem
-                colSpan={1}
-                p="1rem"
-                borderRadius="10px"
-                border="solid 1px"
-              >
+              </TabPanel>
+              <TabPanel p="1rem">
                 <Results />
-              </GridItem>
-            </Grid>
-          </TabPanel>
-          <TabPanel>
-            <Whitelist />
-          </TabPanel>
-          <TabPanel>
-            <Results />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </GridItem>
+        {/* Vote infos */}
+        <GridItem
+          p="1rem"
+          borderRadius="0.5rem"
+          border="solid 1px"
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          <VotingInfos />
+        </GridItem>
+        {/* Workflow */}
+        <GridItem
+          colSpan={1}
+          rowSpan={4}
+          p="1rem"
+          borderRadius="0.5rem"
+          border="solid 1px"
+        >
+          <Workflow />
+        </GridItem>
+      </Grid>
     </Flex>
   );
 };
 
 export default Admin;
+
+{
+  /* <Grid templateColumns="1fr 1fr 1fr" gap={4} height="100%">
+                  <GridItem
+                    colSpan={1}
+                    p="1rem"
+                    borderRadius="10px"
+                    border="solid 1px"
+                  >
+                    <Whitelist />
+                  </GridItem>
+                  <GridItem
+                    colSpan={1}
+                    p="1rem"
+                    borderRadius="10px"
+                    border="solid 1px"
+                  >
+                    <Workflow />
+                  </GridItem>
+                  <GridItem
+                    colSpan={1}
+                    p="1rem"
+                    borderRadius="10px"
+                    border="solid 1px"
+                  >
+                    <Results />
+                  </GridItem>
+                </Grid> */
+}

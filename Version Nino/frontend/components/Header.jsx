@@ -18,51 +18,40 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import ReadFunctionsContext from "@/context/ReadFunctions";
+import { useAccount } from "wagmi";
+import { useContext } from "react";
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { address, isConnected } = useAccount();
+  const { ownerAddress } = useContext(ReadFunctionsContext);
+
   return (
     <Flex
       justifyContent="space-between"
       alignItems="center"
       pl="2rem"
       pr="2rem"
-      pt="1rem"
-      pb="1rem"
+      pt="0.5rem"
+      pb="0.5rem"
     >
-      <Text fontSize="2xl" fontWeight="bold">
-        Voting DApp
-      </Text>
-      <Flex>
-        <Card maxW="md" size="xs" p="0.7rem" borderRadius="1rem">
-          <CardHeader>
-            <Flex spacing="4">
-              <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                <Avatar
-                  size="sm"
-                  name="Ryan Florence"
-                  src="https://bit.ly/ryan-florence"
-                />
-                <Box>
-                  <Heading size="md">Admin</Heading>
-                </Box>
-                <ConnectButton
-                  accountStatus="avatar"
-                  chainStatus="name"
-                  showBalance={true}
-                  label="Sign in"
-                />
-                <Button
-                  onClick={toggleColorMode}
-                  alignSelf="center"
-                  borderRadius="1rem"
-                >
-                  {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-                </Button>
-              </Flex>
-            </Flex>
-          </CardHeader>
-        </Card>
+      <Heading size="lg">Voting DApp</Heading>
+      <Flex align-items="center">
+        <ConnectButton
+          accountStatus="avatar"
+          chainStatus="name"
+          showBalance={true}
+          label="Connect wallet"
+        />
+        <Button
+          onClick={toggleColorMode}
+          alignSelf="center"
+          borderRadius="0.7rem"
+          ml="0.5rem"
+        >
+          {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+        </Button>
       </Flex>
     </Flex>
   );

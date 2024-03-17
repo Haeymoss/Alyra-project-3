@@ -12,12 +12,10 @@ const Layout = ({ children }) => {
       backgroundColor="color1"
     >
       <Header />
-      <Divider colorScheme="red" size="sm" />
+      <Divider />
       <Flex grow="1" p="2rem">
         {children}
       </Flex>
-      <Divider color="#888C9E" />
-      <Footer />
     </Flex>
   );
 };
