@@ -88,11 +88,9 @@ const Results = () => {
           ))}
         </Tbody>
       </Table>
-      {/* If there are no proposals, display a message */}
       {proposalRegisteredEvent.length === 0 && (
         <Text color="gray.500" mt="1rem">
-          There are no proposals registered at the moment as the proposal
-          registration period has not yet begun.
+          There are no proposals registered yet.
         </Text>
       )}
     </div>

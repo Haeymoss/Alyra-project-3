@@ -35,6 +35,7 @@ const Admin = () => {
             </TabPanels>
           </Tabs>
         </GridItem>
+
         {/* Vote infos */}
         <GridItem
           p="1rem"
@@ -44,6 +45,7 @@ const Admin = () => {
         >
           <VotingInfos />
         </GridItem>
+
         {/* Workflow */}
         <GridItem
           colSpan={1}
@@ -60,32 +62,3 @@ const Admin = () => {
 };
 
 export default Admin;
-
-{
-  /* <Grid templateColumns="1fr 1fr 1fr" gap={4} height="100%">
-                  <GridItem
-                    colSpan={1}
-                    p="1rem"
-                    borderRadius="10px"
-                    border="solid 1px"
-                  >
-                    <Whitelist />
-                  </GridItem>
-                  <GridItem
-                    colSpan={1}
-                    p="1rem"
-                    borderRadius="10px"
-                    border="solid 1px"
-                  >
-                    <Workflow />
-                  </GridItem>
-                  <GridItem
-                    colSpan={1}
-                    p="1rem"
-                    borderRadius="10px"
-                    border="solid 1px"
-                  >
-                    <Results />
-                  </GridItem>
-                </Grid> */
-}

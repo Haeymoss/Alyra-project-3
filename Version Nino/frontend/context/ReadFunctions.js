@@ -29,18 +29,12 @@ export const ReadFunctionsProvider = ({ children }) => {
     functionName: "workflowStatus",
   });
 
-  // Get a voter
-  // const {
-  //   data: voter,
-  //   error: getVoterError,
-  //   isPending: getVoterIsPending,
-  //   refetch: refetchVoter,
-  // } = useReadContract({
-  //   address: contractAddress,
-  //   abi: contractAbi,
-  //   functionName: "getVoter",
-  //   args: [],
-  // });
+  // Read the winner of the vote
+  const { data: winner } = useReadContract({
+    address: contractAddress,
+    abi: contractAbi,
+    functionName: "winningProposalID",
+  });
 
   return (
     <ReadFunctionsContext.Provider
@@ -48,6 +42,7 @@ export const ReadFunctionsProvider = ({ children }) => {
         ownerAddress,
         workflowStatus,
         refetchWorkflowStatus,
+        winner,
       }}
     >
       {children}

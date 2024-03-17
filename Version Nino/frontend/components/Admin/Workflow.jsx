@@ -29,15 +29,14 @@ import {
   StepStatus,
   StepSeparator,
 } from "@chakra-ui/react";
-import EventsContext from "@/context/Events";
 import { contractAddress, contractAbi } from "@/constants";
 import {
   useAccount,
-  useReadContract,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
 import ReadFunctionsContext from "@/context/ReadFunctions";
+import ProposalModal from "./ProposalModal";
 
 const Workflow = () => {
   const { address } = useAccount();
@@ -62,7 +61,6 @@ const Workflow = () => {
     { title: "Tallying of votes", description: "Workflow 5" },
   ];
 
-  // Récupération du smart contract
   // Write the workflow status
   const {
     data: hash,
@@ -204,14 +202,19 @@ const Workflow = () => {
             ))}
           </Stepper>
         </Box>
-        {address === ownerAddress && (
-          <Button
-            rightIcon={<ArrowForwardIcon />}
-            colorScheme="blue"
-            onClick={handleNextWorkflow}
-          >
-            Move on to the next workflow
-          </Button>
+
+        {workflowStatus === 5 ? (
+          <ProposalModal />
+        ) : (
+          address === ownerAddress && (
+            <Button
+              rightIcon={<ArrowForwardIcon />}
+              colorScheme="blue"
+              onClick={handleNextWorkflow}
+            >
+              Move on to the next workflow
+            </Button>
+          )
         )}
       </Flex>
     </div>

@@ -10,6 +10,7 @@ import {
   AlertIcon,
   List,
   ListItem,
+  Text,
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import {
@@ -135,6 +136,11 @@ const Vote = () => {
           ))}
         </Tbody>
       </Table>
+      {votedEvent.length === 0 && (
+        <Text color="gray.500" mt="1rem">
+          No one has voted yet.
+        </Text>
+      )}
     </div>
   );
 };
