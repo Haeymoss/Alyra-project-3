@@ -38,6 +38,8 @@ import {
 import ReadFunctionsContext from "@/context/ReadFunctions";
 import ProposalModal from "./ProposalModal";
 
+import ProposalModal from "./ProposalModal";
+
 const Workflow = () => {
   const { address } = useAccount();
   const { ownerAddress, workflowStatus, refetchWorkflowStatus } =
@@ -148,6 +150,8 @@ const Workflow = () => {
 
     const currentWorkflowFunction = workflowFunctions[workflowStatus];
 
+
+
     if (currentWorkflowFunction) {
       try {
         await currentWorkflowFunction();
@@ -159,7 +163,8 @@ const Workflow = () => {
           isClosable: true,
         });
       }
-    } else {
+    }
+     else {
       toast({
         title: "Vous avez atteint le dernier workflow.",
         status: "info",
@@ -168,6 +173,7 @@ const Workflow = () => {
       });
     }
   };
+
 
   return (
     <div>

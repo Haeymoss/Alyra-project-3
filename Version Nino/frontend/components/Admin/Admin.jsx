@@ -6,6 +6,7 @@ import Workflow from "./Workflow";
 import Results from "../Results";
 import VotingInfos from "../VotingInfos";
 
+
 const Admin = () => {
   return (
     <Flex direction="column" width="100%" alignItems="center">

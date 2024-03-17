@@ -27,6 +27,7 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
   useWatchContractEvent,
+
 } from "wagmi";
 import { contractAddress, contractAbi } from "@/constants";
 import { parseAbiItem } from "viem";
@@ -63,6 +64,7 @@ function ProposalModal() {
       <Modal isOpen={isOpen} size={"2xl"} onClose={onClose}>
         <ModalContent>
           <ModalHeader>Winner</ModalHeader>
+
           <ModalCloseButton />
           <ModalBody>
             <Flex align="center" justify="center">
@@ -81,6 +83,7 @@ function ProposalModal() {
       </Modal>
     </div>
   );
+
 }
 
 export default ProposalModal;
