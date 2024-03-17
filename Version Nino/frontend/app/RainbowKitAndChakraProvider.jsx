@@ -8,17 +8,17 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
-  hardhat
-} from 'wagmi/chains';
+  sepolia,
+} from '@/utils/sepolia';
 import {
   QueryClientProvider,
   QueryClient,
 } from "@tanstack/react-query";
 
 const config = getDefaultConfig({
-    appName: 'My RainbowKit App',
-    projectId: '03f8ec0f8ad40a9b543bb4a1051dd071',
-    chains: [hardhat],
+    appName: 'walletTest Project ',
+    projectId: 'b02510094b8a5edf2be444f3e7902804',
+    chains: [sepolia],
     ssr: true, // If your dApp uses server side rendering (SSR)
 });
 

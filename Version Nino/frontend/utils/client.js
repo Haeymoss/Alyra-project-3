@@ -19,6 +19,6 @@ chain : La chaîne de blocs avec laquelle le client doit interagir, ici spécifi
 transport : Le mode de transport utilisé pour envoyer et recevoir des données de la blockchain, spécifié ici comme http(), ce qui indique que les requêtes HTTP seront utilisées.
 */
 export const publicClient = createPublicClient({
-    chain: hardhat,
+    chain: sepolia,
     transport: http(),
 });
