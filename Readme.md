@@ -8,8 +8,8 @@
 
 ## Pour correction :
 
-Lien vidéo :
-Lien Déploiement sur Sépolia : 
+- Lien vidéo :
+- Lien Déploiement sur Sépolia : 
 
 ### Sécurité & optimisation du smart contract
 
