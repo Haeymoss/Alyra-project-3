@@ -1,16 +1,14 @@
 "use client";
 
 import EventsContext from "@/context/Events";
+import ReadFunctionsContext from "@/context/ReadFunctions";
 import { Badge, Flex, Heading, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 
 const VotingInfos = () => {
-  const {
-    voterRegisteredEvent,
-    workflowStatus,
-    proposalRegisteredEvent,
-    votedEvent,
-  } = useContext(EventsContext);
+  const { voterRegisteredEvent, proposalRegisteredEvent, votedEvent } =
+    useContext(EventsContext);
+  const { workflowStatus } = useContext(ReadFunctionsContext);
   const [numberOfVoters, setNumberOfVoters] = useState(0);
   const [numberOfProposals, setNumberOfProposals] = useState(0);
   const [numberOfVotes, setNumberOfVotes] = useState(0);
@@ -52,7 +50,7 @@ const VotingInfos = () => {
                 ? "End of voting session"
                 : workflowStatus === 4
                 ? "Tallying of votes"
-                : "Workflow ended"}
+                : "Voter Registration"}
             </Badge>
           }
         </Text>
