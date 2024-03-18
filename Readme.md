@@ -8,13 +8,14 @@
 
 ## Pour correction :
 
-Lien vidéo : 
+Lien vidéo :
 Lien Déploiement sur Sépolia : 
 
 ### Sécurité & optimisation du smart contract
 
-La faille dans la première version de Voting.sol était le fait que pour faire le décompte des votes présente dans la fonction tallyVotes :
-- Suppres
+Dans la première version de Voting.sol, le décompte des votes dans la fonction "tallyVotes" entrainait un problème de "DOS / Gas limit". La fonction utilisait un boucle pour parcourir toutes les propositions et déterminer celle avec le plus grand nombre de vote. Cela peut poser problème si un attaquant ajoute un grand nombre de propositions, le smart contract arriverait à sa limite de gas pour 1 transaction et cela empecherait le bon déroulé du protocole.
+Pour résoudre ce problème nous avons ajouté une condition dans la fonction "setVote" qui permet de mettre à jour à chaque vote la proposition gagnante :
+
 if (
     proposalsArray[_id].voteCount >
     proposalsArray[winningProposalID].voteCount
@@ -22,12 +23,15 @@ if (
     winningProposalID = _id;
 }
 
-Niveaux bonnes pratiques nous avons fait ceci:  
+Niveaux bonnes pratiques nous avons ajouter des NatSpec ce qui permet de compléter le contrat en décrivant les fonctions afin de générer de la documentation détaillée. 
 
 ### Front
 Voici la liste de la stack utilisée pour la réalisation du projet
-- truc
-- truc
+- Framework : Next.js
+- Librairie : React.js avec ChakraUI
+- Outil de liaison avec le smart contract : Wagmi & Rainbowkit
+- Wallet : Metamask
+- Déploiement public : Vercel
 
 ## Description du smart contract "Voting"
 
