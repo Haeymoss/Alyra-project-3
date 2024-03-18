@@ -8,8 +8,8 @@
 
 ## Pour correction :
 
-- Lien vidéo :
-- Lien Déploiement sur Sépolia : 
+- Lien vidéo : https://www.loom.com/share/2aa272fb623e4e9ab9c0b190e5848b0c
+- Lien de la Dapp déployée sur Sépolia : https://projet3vercel.vercel.app/
 
 ### Sécurité & optimisation du smart contract
 
