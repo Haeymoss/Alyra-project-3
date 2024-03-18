@@ -81,3 +81,11 @@ Ce smart contract permet de créer et de gérer un processus de vote en plusieur
 
 ## Résultats
 
+### Home
+![Alt text](assets/Home.png)
+
+### Admin Dashboard
+![Alt text](assets/AdminDashboard.png)
+
+### Voter Dashboard
+![Alt text](assets/VoterDashboard.png)
