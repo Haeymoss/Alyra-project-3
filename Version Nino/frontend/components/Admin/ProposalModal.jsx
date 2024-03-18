@@ -46,11 +46,14 @@ function ProposalModal() {
   const [results, setresults] = useState("");
 
   const [showConfetti, setShowConfetti] = useState(false);
-  const { winner } = useContext(ReadFunctionsContext);
+  const { refetchWinningProposalId, winner } = useContext(ReadFunctionsContext);
+
+
+
 
   useEffect(() => {
     if (isOpen) {
-      setShowConfetti(true); // Active le confetti à l'ouverture de la modale
+      setShowConfetti(true);
     } else {
       setShowConfetti(false); // Désactive le confetti à la fermeture de la modale
     }
@@ -58,7 +61,7 @@ function ProposalModal() {
 
   return (
     <div>
-      <Button onClick={onOpen} colorScheme="blue" width={"100%"}>
+      <Button onClick={() => {onOpen(), refetchWinningProposalId()}} colorScheme="blue" width={"100%"}>
         Display the winning proposal
       </Button>
       <Modal isOpen={isOpen} size={"2xl"} onClose={onClose}>
@@ -82,6 +85,7 @@ function ProposalModal() {
         </ModalContent>
       </Modal>
     </div>
+   
   );
 
 }

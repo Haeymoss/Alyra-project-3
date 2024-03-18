@@ -38,12 +38,15 @@ import {
 import ReadFunctionsContext from "@/context/ReadFunctions";
 import ProposalModal from "./ProposalModal";
 
-import ProposalModal from "./ProposalModal";
+
+
 
 const Workflow = () => {
   const { address } = useAccount();
-  const { ownerAddress, workflowStatus, refetchWorkflowStatus } =
+  const { ownerAddress, workflowStatus, refetchWorkflowStatus, winner, votedEvent } =
     useContext(ReadFunctionsContext);
+  
+
   const toast = useToast();
   const steps = [
     { title: "Voter Registration", description: "Workflow 0" },
@@ -150,6 +153,7 @@ const Workflow = () => {
 
     const currentWorkflowFunction = workflowFunctions[workflowStatus];
 
+    
 
 
     if (currentWorkflowFunction) {
@@ -173,6 +177,7 @@ const Workflow = () => {
       });
     }
   };
+
 
 
   return (

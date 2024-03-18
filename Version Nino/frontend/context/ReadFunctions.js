@@ -30,7 +30,7 @@ export const ReadFunctionsProvider = ({ children }) => {
   });
 
   // Read the winner of the vote
-  const { data: winner } = useReadContract({
+  const { data: winner , refetch: refetchWinningProposalId} = useReadContract({
     address: contractAddress,
     abi: contractAbi,
     functionName: "winningProposalID",
@@ -42,6 +42,7 @@ export const ReadFunctionsProvider = ({ children }) => {
         ownerAddress,
         workflowStatus,
         refetchWorkflowStatus,
+        refetchWinningProposalId,
         winner,
       }}
     >
