@@ -65,7 +65,7 @@ Ce smart contract implémente un système de vote avec différentes phases gér�
 
 #### Gestion du vote
 
-- `setVote`: Permet à un électeur inscrit de voter pour une proposition. Vérifie que la session de vote est active, que l'électeur n'a pas déjà voté, et que la proposition existe.
+- `setVote`: Permet à un électeur inscrit de voter pour une proposition. Vérifie que la session de vote est active, que l'électeur n'a pas déjà voté, et que la proposition existe. Détermine la proposition gagnante en mettant à jour la `winningProposalID` à chaque vote.
 
 ### Gestion des états
 
