@@ -48,7 +48,7 @@ const VotingInfos = () => {
                 ? "Voting session"
                 : workflowStatus === 4
                 ? "End of voting session"
-                : workflowStatus === 4
+                : workflowStatus === 5
                 ? "Tallying of votes"
                 : "Voter Registration"}
             </Badge>
